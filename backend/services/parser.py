@@ -10,64 +10,55 @@ client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 def parse_input(txt):
     prompt = f"""
-        You are a business decision parser.
+        You are a forecasting intent parser for a business analytics tool.
 
-        Your job is to interpret small business questions about hypothetical changes they want to make, and return a structured JSON object that can be used in a simulation engine.
+        Your job is to extract structured forecast instructions from a user's question. Always respond with JSON in the following format:
 
-        Your response must always be in valid JSON format.
-
-        ---
-
-        If the input is understandable and actionable, return an object like:
-
-        {{
+        {
         "valid": true,
-        "action_type": "price_change",
-        "scope": "top_3_products",
-        "magnitude": "+20%"
-        }}
+        "product": <string or null>,
+        "target": "revenue",
+        "horizon": <number of days into the future>
+        }
 
-        If the input is vague, unclear, unsupported, or non-actionable (e.g. philosophical, open-ended, or off-topic), return:
+        If the request cannot be parsed or is unrelated to forecasting, return:
 
-        {{
+        {
         "valid": false,
-        "reason": "Unrecognized or unsupported business action"
-        }}
+        "reason": "..."
+        }
+
+        Default to 30 days if the user does not specify a time horizon.
+        Default to null for "product" if the user does not specify a product.
+
+        Here are some examples:
 
         ---
 
-        Supported action types:
-        - price_change
-        - ad_budget_change
-        - channel_shift
-        - product_addition
-        - product_removal
-        - operating_hours_change
-        - staff_change
-        - bundle_creation
-        - subscription_change
-        - refund_policy_change
-        - inventory_increase
-        - location_change
+        User input: "Forecast sales for Coffee Mug"
+        Output:
+        {
+        "valid": true,
+        "product": "Coffee Mug",
+        "target": "revenue",
+        "horizon": 30
+        }
 
-        Supported scope examples:
-        - top_3_products
-        - all_products
-        - channel:Facebook
-        - channel:Email
-        - day:Monday
-        - day:Weekends
-        - product:Coffee_Mug
-        - location:NYC
-        - staff:PartTime
-        - subscription:Basic_Plan
+        User input: "What will revenue look like for the next 60 days?"
+        Output:
+        {
+        "valid": true,
+        "product": null,
+        "target": "revenue",
+        "horizon": 60
+        }
 
-        Supported magnitude formats:
-        - "+15%", "-10%"
-        - "+$500", "-$200"
-        - "+2", "-1"
-        - "new_bundle"
-        - "new_product"
+        User input: "Should I hire more staff?"
+        Output:
+        {
+        "valid": false,
+        "reason": "Question is not about forecasting"
+        }
 
         ---
 
@@ -75,7 +66,7 @@ def parse_input(txt):
 
         "{txt}"
 
-        Respond only with the resulting JSON object.
+        Respond only with the JSON.
         """
 
     response = client.models.generate_content(
