@@ -48,9 +48,39 @@ def forecast_from_text(body: dict = Body(...), db: Session = Depends(get_db)):
     user_id = body["user_id"]
     input_txt = body["input_txt"]
 
-    parsed_response = parse_input(input_txt)
+    parsed = parse_input(input_txt)
+    if not parsed["valid"]:
+        return {
+            "status": "error",
+            "message": parsed["reason"] if "reason" in parsed else "Unable to predict. Please try another prompt."
+        }
 
-    if parsed_response[]
+    product = parsed["product"]
+    horizon = parsed["horizon"]
+
+    try:
+        df = load_latest_user_upload(user_id, db)
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": (str(e))
+        }
+
+    forecast = run_forecast(product, df, horizon)
+    if "status" in forecast and forecast["status"] == "error":
+        return forecast
+
+    explanation = explain_forecast(product, forecast, horizon)
+    graph = plot_forecast(forecast, product)
+
+    return {
+        "status": "success",
+        "product": product,
+        "horizon": horizon,
+        "forecast": forecast,
+        "explanation": explanation,
+        "graph": graph
+    }
 
 
 if __name__ == "__main__":
