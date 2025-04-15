@@ -1,5 +1,4 @@
 from services.parser import parse_input
-from services.data_formats import ParseInput
 from services.uploader import save_csv_to_database, load_latest_user_upload
 from services.forecast import run_forecast
 from fastapi import FastAPI, UploadFile, File, Form, Depends
@@ -12,8 +11,8 @@ app = FastAPI(title="BDIS")
 
 
 @app.post('/parse')
-def parser(data: ParseInput):
-    return parse_input(data.input_txt)
+def parser(input_txt):
+    return parse_input(input_txt)
 
 
 @app.post('/upload')
