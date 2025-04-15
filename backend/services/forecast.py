@@ -3,6 +3,13 @@ import pandas as pd
 
 
 def run_forecast(product: str, df, horizon=30):
+    required = {"product", "date", "revenue"}
+    if not required.issubset(set(df.columns)):
+        return {
+            "status": "error",
+            "message": f"Missing required columns: {required - set(df.columns)}"
+        }
+
     product_df = df[df["product"] == product].copy()
 
     product_df["ds"] = pd.to_datetime(product_df["date"])
