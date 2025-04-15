@@ -46,6 +46,7 @@ def load_latest_user_upload(user_id: str, db: Session) -> pd.DataFrame:
         .first()
     )
     if not upload:
-        raise ValueError("No uploads found for this user.")
+        raise ValueError(
+            "Please upload a CSV containing the product, date, and revenue data.")
 
     return pd.read_json(upload.data_json)
