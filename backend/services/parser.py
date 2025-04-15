@@ -106,4 +106,4 @@ def explain_forecast(product, forecast, horizon):
     response = client.models.generate_content(
         model="gemini-2.0-flash", contents=prompt
     ).text
-    return response.text.strip()
+    return response.strip()

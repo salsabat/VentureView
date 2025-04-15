@@ -49,4 +49,4 @@ def load_latest_user_upload(user_id: str, db: Session) -> pd.DataFrame:
         raise ValueError(
             "Please upload a CSV containing the product, date, and revenue data.")
 
-    return pd.read_json(upload.data_json)
+    return pd.read_json(StringIO(upload.data_json))
