@@ -83,3 +83,27 @@ def parse_input(txt):
         }
 
     return json.load(parsed_response)
+
+
+def explain_forecast(product, forecast, horizon):
+    prompt = f"""
+        You are a business analyst.
+
+        A user has uploaded sales data for the product "{product}" and requested a {horizon}-day forecast.
+
+        You were given this forecast:
+
+        {forecast}
+
+        Please provide a clear and concise business-style summary of the forecast. Mention:
+            - Whether sales are expected to increase or decrease
+            - Any peaks or drops
+            - The general trend
+
+        Return only the explanation text, no bullet points or headings.
+    """
+
+    response = client.models.generate_content(
+        model="gemini-2.0-flash", contents=prompt
+    ).text
+    return response.text.strip()
