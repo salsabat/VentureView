@@ -11,6 +11,11 @@ def run_forecast(product: str, df, horizon=30):
         }
 
     product_df = df[df["product"] == product].copy()
+    if product_df.empty or len(product_df) < 2:
+        return {
+            "status": "error",
+            "message": f"Not enough data to forecast product '{product}'."
+        }
 
     product_df["ds"] = pd.to_datetime(product_df["date"])
     product_df["y"] = product_df["revenue"]
