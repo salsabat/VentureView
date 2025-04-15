@@ -14,19 +14,19 @@ def parse_input(txt):
 
         Your job is to extract structured forecast instructions from a user's question. Always respond with JSON in the following format:
 
-        {
+        {{
         "valid": true,
         "product": <string or null>,
         "target": "revenue",
         "horizon": <number of days into the future>
-        }
+        }}
 
         If the request cannot be parsed or is unrelated to forecasting, return:
 
-        {
+        {{
         "valid": false,
         "reason": "..."
-        }
+        }}
 
         Default to 30 days if the user does not specify a time horizon.
         Default to null for "product" if the user does not specify a product.
@@ -37,28 +37,28 @@ def parse_input(txt):
 
         User input: "Forecast sales for Coffee Mug"
         Output:
-        {
+        {{
         "valid": true,
         "product": "Coffee Mug",
         "target": "revenue",
         "horizon": 30
-        }
+        }}
 
         User input: "What will revenue look like for the next 60 days?"
         Output:
-        {
+        {{
         "valid": true,
         "product": null,
         "target": "revenue",
         "horizon": 60
-        }
+        }}
 
         User input: "Should I hire more staff?"
         Output:
-        {
+        {{
         "valid": false,
         "reason": "Question is not about forecasting"
-        }
+        }}
 
         ---
 
@@ -82,7 +82,7 @@ def parse_input(txt):
             "reason": f"Parser error: {str(e)}"
         }
 
-    return json.load(parsed_response)
+    return json.loads(parsed_response)
 
 
 def explain_forecast(product, forecast, horizon):
