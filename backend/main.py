@@ -7,13 +7,22 @@ from fastapi import FastAPI, UploadFile, File, Form, Depends, Body
 import uvicorn
 from sqlalchemy.orm import Session
 from db import get_db
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI(title="BDIS")
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.post("/login")
-def login(email: str, db: Session = Depends(get_db)):
+def login(email: str = Form(...), db: Session = Depends(get_db)):
     user = get_or_create_user(email=email, db=db)
     return {"user_id": user.id}
 
