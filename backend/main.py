@@ -2,6 +2,7 @@ from services.parser import parse_input, explain_forecast
 from services.uploader import save_csv_to_database, load_latest_user_upload
 from services.forecast import run_forecast
 from services.plotter import plot_forecast
+from services.user import get_or_create_user
 from fastapi import FastAPI, UploadFile, File, Form, Depends, Body
 import uvicorn
 from sqlalchemy.orm import Session
@@ -9,6 +10,12 @@ from db import get_db
 
 
 app = FastAPI(title="BDIS")
+
+
+@app.post("/login")
+def login(email: str, db: Session = Depends(get_db)):
+    user = get_or_create_user(email=email, db=db)
+    return {"user_id": user.id}
 
 
 @app.post('/parse')
