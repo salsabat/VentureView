@@ -1,57 +1,36 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function ForecastInput({ userId, onResult }) {
+function ForecastInput({ userId }) {
   const [prompt, setPrompt] = useState("");
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleForecast = async () => {
-    if (!prompt || !userId) return;
+  const handleSubmit = async () => {
+    const res = await fetch("http://localhost:8000/forecast/natural", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id: userId, input_txt: prompt }),
+    });
+    const data = await res.json();
 
-    setLoading(true);
-
-    try {
-      const res = await fetch("http://localhost:8000/forecast/natural", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_id: userId,
-          input_txt: prompt,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (data.status === "error") {
-        onResult({
-          explanation: `${data.message}`,
-          graph_base64: null,
-        });
-      } else {
-        onResult(data);
-      }
-    } catch (err) {
-      onResult({
-        explanation: "Server error. Please try again.",
-        graph_base64: null,
-      });
+    if (data.status === "success") {
+      localStorage.setItem("forecast_result", JSON.stringify(data));
+      navigate("/results");
+    } else {
+      alert(data.message || "Something went wrong.");
     }
-
-    setLoading(false);
   };
 
   return (
     <div>
-      <p>Enter a forecast request:</p>
       <textarea
-        rows={4}
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
-        placeholder="e.g. Forecast sales for Coffee Mug for the next 30 days"
+        placeholder="e.g. Forecast revenue for Notebooks for 7 days"
       />
-      <br />
-      <button onClick={handleForecast} disabled={loading}>
-        {loading ? "Loading..." : "Generate Forecast"}
-      </button>
+      <button onClick={handleSubmit}>Generate Forecast</button>
     </div>
   );
 }
+
+export default ForecastInput;
