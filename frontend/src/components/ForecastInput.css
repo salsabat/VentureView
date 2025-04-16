@@ -1,0 +1,74 @@
+.forecast-input-container {
+    background-color: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    transition: transform 0.3s ease;
+    border: 1px solid rgba(230, 224, 207, 0.3);
+  }
+  
+  .forecast-input-container:hover {
+    transform: translateY(-5px);
+  }
+  
+  .forecast-input-container h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+    text-align: center;
+  }
+  
+  .forecast-input-container textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    border: 2px solid #e6e0cf;
+    border-radius: 16px;
+    font-size: 1rem;
+    background-color: #fefefe;
+    resize: vertical;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) inset;
+  }
+  
+  .forecast-input-container textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+    transform: scale(1.01);
+  }
+  
+  .forecast-input-container textarea::placeholder {
+    color: #aaa;
+  }
+  
+  .forecast-input-container button {
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    width: 100%;
+  }
+  
+  .forecast-input-container button:hover {
+    background: linear-gradient(135deg, #0069d9, #004494);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+  }
+  
+  .forecast-input-container button:disabled {
+    background: linear-gradient(135deg, #cccccc, #999999);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
