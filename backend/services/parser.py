@@ -5,7 +5,7 @@ import os
 
 load_dotenv()
 
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+client = genai.Client(api_key=os.getenv("LLM_API_KEY"))
 
 
 def parse_input(txt):
